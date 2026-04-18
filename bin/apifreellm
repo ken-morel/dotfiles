@@ -1,0 +1,11 @@
+#!/usr/bin/env -S nu --stdin
+
+def main [] {
+  http post https://apifreellm.com/api/v1/chat --headers {
+      Authorization: $"Bearer ($env.apifreellm)"
+    } --content-type application/json {
+      message: $in
+    } |
+    get response |
+    print $in
+}

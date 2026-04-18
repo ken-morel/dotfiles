@@ -1,0 +1,33 @@
+#!/usr/bin/fish
+
+set vnc_pid ""
+
+echo "Watching VT ..."
+
+function getactive
+    cat /sys/class/tty/tty0/active
+end
+
+set base_vt (getactive)
+
+while true
+    set active_vt (getactive)
+
+    if test "$active_vt" = "$base_vt"
+        if test -z "$vnc_pid"
+            echo "Starting fbvnc..."
+            fish -c "$argv" >/dev/null 2>&1 &
+            set vnc_pid $last_pid
+        end
+    else if "$active_vt" = "$tty9"
+        kill "$vnc_pid"
+        break
+    else
+        if test -n "$vnc_pid"
+            echo "Killing fbvnc..."
+            kill "$vnc_pid"
+            set vnc_pid ""
+        end
+    end
+    inotifywait -e modify /sys/class/tty/tty0/active >/dev/null 2>&1
+end

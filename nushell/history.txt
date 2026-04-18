@@ -1,0 +1,116 @@
+sudo rm -r home/engon/apps/helix_main home/engon/apps/sowon home/engon/apps/helix/runtime home/engon/apps/mc home/engon/apps/endv/.endv home/engon/apps/brow6el home/engon/.cache/helix/helix.log home/engon/.cache/qutebrowser home/engon/.cache/mozilla home/engon/.cache/go-build home/engon/.cache/goimports home/engon/.cache/ms-playwright-go home/engon/.cache/spotify home/engon/Downloads/tdm_installer home/engon/Downloads/terraria_v1_4_5_5_88657 home/engon/Downloads/superhtml-x86_64-linux-musl.tar.xz home/engon/Downloads/liste_francais.zip usr/lib/helix/grammars/sources
+sudo rm -rf home/engon/apps/helix_main home/engon/apps/sowon home/engon/apps/helix/runtime home/engon/apps/mc home/engon/apps/endv/.endv home/engon/apps/brow6el home/engon/.cache/helix/helix.log home/engon/.cache/qutebrowser home/engon/.cache/mozilla home/engon/.cache/go-build home/engon/.cache/goimports home/engon/.cache/ms-playwright-go home/engon/.cache/spotify home/engon/Downloads/tdm_installer home/engon/Downloads/terraria_v1_4_5_5_88657 home/engon/Downloads/superhtml-x86_64-linux-musl.tar.xz home/engon/Downloads/liste_francais.zip usr/lib/helix/grammars/sources
+ls
+exit
+exit
+hx
+exit
+julia
+exit
+spotify_player
+exit
+ls
+exit
+nano ~/.config/helix/config.toml 
+vim ~/.config/helix/config.toml 
+hx
+hx ~/.config/nushell/config.nu 
+exit
+pkill -9 hx
+pkill -9 helix
+pkill -9 hx
+ls
+clear
+ls
+cd ~/apps/
+ls
+trash helix
+ls
+ls ~/.local/share/Trash
+ls ~/.local/share/Trash/fiels
+ls ~/.local/share/Trash/files
+ls
+rm helix -r
+ls
+gh repo clone helix-editor/helix
+ls
+cd helix
+ls
+cargo build -p helix-term --locked
+cargo build -p helix-term --locked --release 
+ls
+cd .
+ls
+cd apps/helix
+ls
+exit
+ls
+..
+ls
+rm helix -r
+hx ~/.config/home-manager/home.nix 
+exit
+pulsemixer 
+exit
+ama
+dir
+ls
+home-manager switch
+exit
+sudo dua i
+nix-clean
+sudo dua i
+hx
+cd ~
+dua i
+ls
+carbonyl https://projina.top
+carbonyl https://ghostty.org
+exit
+mmcli
+/nix/store/93hjvx9cb5ailbkidah4dq3b2gg34nqp-modemmanager-1.24.2/bin/mmcli
+/nix/store/93hjvx9cb5ailbkidah4dq3b2gg34nqp-modemmanager-1.24.2/bin/mmcli -h
+js
+cha projina.top
+cha ghostty.org
+cd ~/.config/nchat/profiles/WhatsAppMd_+237670570039/
+ls
+mv tmp ~/.cache/nchat
+l
+ln -s ~/.cache/nchat tmp
+ls tmp
+du tmp
+ls
+du .
+du tmp
+..
+ls
+zpaqfranz pkg.zpaq ./WhatsAppMd_+237670570039
+zpaqfranz a pkg.zpaq ./WhatsAppMd_+237670570039
+ls
+du pkg.zpaq
+rm pkg.zpaq
+ls
+exit
+ls
+task help
+task 
+ls
+task
+bluetuith
+keychain ~/.ssh/id_ed25519 --eval<\n>  | parse "{env}={val}; export {_}"<\n>  | each {|e| $"$env.($e.env) = ($e.val)" }<\n>  | str join "\n"<\n>  | save --force /tmp/nushell/keychain.nu<\n>
+exit
+complete -C
+fish -c "complete -C(commandline -cp)"
+pacman -Ss km
+pacman -Ss kmsco
+pacman -Ss kms
+pacman -Ss dragon<\n>    | lines<\n>    | str trim<\n>    | group 2<\n>    | each {|it| { rest: $it.0, desc: $it.1 }}<\n>    | update rest { parse "{repo}/{pkg} {version}" }<\n>    | flatten --all
+exit
+ls /tmp/nushell
+hx ~/.config/nushell/env.nu
+reboot
+hx ~/.config/nushell/login.nu
+ls /tmp/nushell
+hx ~/.config/nushell/login.nu
+reboot

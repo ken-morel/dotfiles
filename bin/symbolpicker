@@ -1,0 +1,154 @@
+#!/usr/bin/env fish
+
+# A Rofi/Wofi script to pick a Unicode symbol and type it.
+# Dependencies:
+# - rofi (for X11) or wofi (for Wayland)
+# - xdotool (for X11) or wtype (for Wayland)
+
+# --- Symbol List ---
+# Format: "Symbol\tHexCode\tDecimalCode\tDescription"
+set symbols "α\t03B1\t945\tAlpha
+β\t03B2\t946\tBeta
+γ\t03B3\t947\tGamma
+δ\t03B4\t948\tDelta
+ε\t03B5\t949\tEpsilon
+π\t03C0\t960\tPi
+λ\t03BB\t955\tLambda
+μ\t03BC\t956\tMu
+Σ\t03A3\t931\tSummation (Uppercase)
+σ\t03C3\t963\tSigma (Lowercase)
+∞\t221E\t8734\tInfinity
+∫\t222B\t8747\tIntegral
+√	221A	8730	Square Root
+≈	2248	8776	Almost Equal To
+≠	2260	8800	Not Equal To
+≤	2264	8804	Less Than or Equal To
+≥	2265	8805	Greater Than or Equal To
+≡	2261	8801	Identical To
+∈	2208	8712	Element Of
+∉	2209	8713	Not an Element Of
+⊂	2282	8834	Proper Subset Of
+⊆	2286	8838	Subset Of or Equal To
+⊃	2283	8835	Proper Superset Of
+⊇	2287	8839	Superset Of or Equal To
+∀	2200	8704	For All
+∃	2203	8707	There Exists
+¬	00AC	172\tNegation / Not
+∧	2227	8743	Logical And (Wedge)
+∨	2228	8744	Logical Or (Vee)
+→	2192	8594	Right Arrow
+←	2190	8592	Left Arrow
+↔	2194	8596	Left-Right Arrow
+⇒	21D2	8658	Right Double Arrow
+⇐	21D0	8656	Left Double Arrow
+⇔	21D4	8660	Left-Right Double Arrow
+∘	2218	8728	Ring Operator / Composition
+∇	2207	8711	Nabla / Del
+∂	2202	8706	Partial Differential
+∏	220F	8719	N-ary Product
+∑	2211	8721	N-ary Summation
+−	2212	8722	Minus Sign
+±	00B1	177\tPlus-Minus Sign
+×	00D7	215\tMultiplication Sign
+÷	00F7	247\tDivision Sign
+∘	2218	8728	Ring Operator
+∙	2219	8729	Bullet Operator
+∝	221D	8733	Proportional To
+∠	2220	8736	Angle
+∧	2227	8743	Logical And
+∨	2228	8744	Logical Or
+∩	2229	8745	Intersection
+∪	222A	8746	Union
+∴	2234	8756	Therefore
+∵	2235	8757	Because
+∶	2236	8758	Ratio
+∼	223C	8764	Tilde Operator
+≃	2243	8771	Asymptotically Equal To
+≅	2245	8773	Approximately Equal To
+⊕	2295	8853	Circled Plus
+⊗	2297	8855	Circled Times
+⊥	22A5	8869	Up Tack / Perpendicular
+⋅	22C5	8901	Dot Operator
+⌈	2308	8968	Left Ceiling
+⌉	2309	8969	Right Ceiling
+⌊	230A	8970	Left Floor
+⌋	230B	8971	Right Floor
+⟨	27E8	10216	Mathematical Left Angle Bracket
+⟩	27E9	10217	Mathematical Right Angle Bracket
+θ	03B8	952\tTheta
+ζ	03B6	950\tZeta
+η	03B7	951\tEta
+κ	03BA	954\tKappa
+ν	03BD	957\tNu
+ξ	03BE	958\tXi
+ρ	03C1	961\tRho
+τ	03C4	964\tTau
+υ	03C5	965\tUpsilon
+φ	03C6	966\tPhi
+χ	03C7	967\tChi
+ψ	03C8	968\tPsi
+ω	03C9	969\tOmega
+Θ	0398	920\tTheta (Uppercase)
+Φ	03A6	934\tPhi (Uppercase)
+Ψ	03A8	936\tPsi (Uppercase)
+Ω	03A9	937\tOmega (Uppercase)
+ℕ	2115	8469	Natural Numbers
+ℤ	2124	8484	Integers
+ℚ	211A	8474	Rational Numbers
+ℝ	211D	8477	Real Numbers
+ℂ	2102	8450	Complex Numbers
+"
+
+# --- Picker Logic ---
+# Detect if we are on Wayland or X11 and choose the picker
+set picker_cmd ""
+set picker_args
+
+if test "$XDG_SESSION_TYPE" = "wayland"
+    if command -v wofi > /dev/null
+        set picker_cmd wofi
+        set picker_args --dmenu -i -p 'Select Symbol'
+    else if command -v rofi > /dev/null
+        # Fallback to rofi if wofi is not found, even on Wayland
+        set picker_cmd rofi
+        set picker_args -dmenu -i -p 'Select Symbol'
+    end
+else
+    if command -v rofi > /dev/null
+        set picker_cmd rofi
+        set picker_args -dmenu -i -p 'Select Symbol'
+    end
+end
+
+if test -z "$picker_cmd"
+    echo "Error: Rofi or Wofi not found." >&2
+    exit 1
+end
+
+# --- Selection and Typing ---
+# Pipe the list into the picker and capture the selection
+set selection (echo -e $symbols | $picker_cmd $picker_args)
+
+# If the user made a selection (didn't press Escape)
+if test -n "$selection"
+    # Extract just the symbol, which is the first field
+    set symbol (echo "$selection" | string split --max 1 \t)[1]
+
+    # Use the correct tool to type the character
+    if test "$XDG_SESSION_TYPE" = "wayland"
+        if command -v wtype > /dev/null
+            wtype "$symbol"
+        else
+            echo "Error: 'wtype' is not installed. Please install it for Wayland support." >&2
+            exit 1
+        end
+    else
+        if command -v xdotool > /dev/null
+            # Use --clearmodifiers to prevent issues with held-down keys
+            xdotool type --clearmodifiers "$symbol"
+        else
+            echo "Error: 'xdotool' is not installed. Please install it for X11 support." >&2
+            exit 1
+        end
+    end
+end

@@ -1,0 +1,12 @@
+#!/usr/bin/env -S nu -n
+
+let char = try {
+  open --raw ~/.config/symbols.tsv
+    | fzf --history=($env.HOME)/.config/symbols-history.txt --multi --tiebreak begin --exact +x +i --tmux --prompt='julia> \' --scheme=history --style=full --color=dark
+    | parse "{symbol}\t{name}"
+    | get symbol.0
+} catch  {
+  ''
+}
+
+print --no-newline $char

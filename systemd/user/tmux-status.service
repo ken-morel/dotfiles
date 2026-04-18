@@ -1,0 +1,12 @@
+[Unit]
+Description=Tmux status line
+After=systemd-user-sessions.service
+
+[Service]
+User=engon
+ExecStart=%h/.config/tmux/status.nu
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=qwen on llama.cpp
+After=network-online.target
+
+[Service]
+#
+#ExecStart=/home/engon/apps/llama.cpp/build/bin/llama-server --ctx-size 2048 --flash-attn on --threads-http 2 --models-max 2 --sleep-idle-seconds 600 --warmup --threads 4 --threads-batch 4 --prio 3 --port 3235 --webui --api-key amemimy --no-mmap --models-dir /home/engon/models/ --log-timestamps --rerank
+# ExecStart=/home/engon/apps/llama.cpp/build/bin/llama-server --models-dir /home/engon/models/ -t 3 -tb 4 -np 4 -c 8192 -b 1024 -ub 1024 -ngl 0 --sleep-idle-seconds 600 --models-max 1 --threads-http 2 --no-mmap --webui --api-key amemimy --mmap -fa on --warmup --port 3235
+ExecStart=%h/.config/bin/llama-coder-server
+User=engon
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

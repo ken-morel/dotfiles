@@ -1,0 +1,178 @@
+
+
+[[mgr.prepend_keymap]]
+on = "!"
+for = "unix"
+run = 'shell $SHELL --block'
+desc = "Open $SHELL here"
+
+# If you also using Yazi on Windows:
+[[mgr.prepend_keymap]]
+on = "!"
+for = "windows"
+run = 'shell "powershell.exe" --block'
+desc = "Open PowerShell here"
+
+
+[[input.prepend_keymap]]
+on = "<Esc>"
+run = "close"
+desc = "Cancel input"
+
+[[mgr.prepend_keymap]]
+on = "t"
+run = "plugin smart-tab"
+desc = "Create a tab and enter the hovered directory"
+
+[[mgr.prepend_keymap]]
+on = "<C-n>"
+run = 'shell -- dragon -x -i -T "$0"'
+
+[[mgr.prepend_keymap]]
+on = "y"
+run = [
+	'shell -- for path in "$@"; do echo "file://$path"; done | wl-copy -t text/uri-list',
+	"yank",
+]
+
+[[mgr.prepend_keymap]]
+on = ["g", "r"]
+run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
+
+# ~/.config/yazi/keymap.toml
+[[mgr.prepend_keymap]]
+on = "<C-m>"
+run = '''shell --
+	paths=$(for p in "$@"; do echo "$p"; done | paste -s -d,)
+	thunderbird -compose "attachment='$paths'"
+'''
+
+# --- MGR Keymaps -------------------------------------------------------------
+
+[[mgr.prepend_keymap]]
+on = ["c", "m"]
+run = "plugin chmod"
+desc = "Chmod on selected files"
+
+# Mount
+[[mgr.prepend_keymap]]
+on = ["M", "M"]
+run = "plugin gvfs -- select-then-mount"
+desc = "Select device then mount"
+
+# Or jump after mounting
+[[mgr.prepend_keymap]]
+on = ["M", "m"]
+run = "plugin gvfs -- select-then-mount --jump"
+desc = "Select device to mount and jump to its mount point"
+
+# Remount current device
+[[mgr.prepend_keymap]]
+on = ["M", "R"]
+run = "plugin gvfs -- remount-current-cwd-device"
+desc = "Remount device under cwd"
+
+# Unmount
+[[mgr.prepend_keymap]]
+on = ["M", "u"]
+run = "plugin gvfs -- select-then-unmount"
+desc = "Select device then unmount"
+
+# Unmount + eject
+[[mgr.prepend_keymap]]
+on = ["M", "u"]
+run = "plugin gvfs -- select-then-unmount --eject"
+desc = "Select device then eject"
+
+# Force unmount/eject
+[[mgr.prepend_keymap]]
+on = ["M", "U"]
+run = "plugin gvfs -- select-then-unmount --eject --force"
+desc = "Select device then force to eject/unmount"
+
+# Add mount URI
+[[mgr.prepend_keymap]]
+on = ["M", "a"]
+run = "plugin gvfs -- add-mount"
+desc = "Add a GVFS mount URI"
+
+# Edit mount URI
+[[mgr.prepend_keymap]]
+on = ["M", "e"]
+run = "plugin gvfs -- edit-mount"
+desc = "Edit a GVFS mount URI"
+
+# Remove mount URI
+[[mgr.prepend_keymap]]
+on = ["M", "r"]
+run = "plugin gvfs -- remove-mount"
+desc = "Remove a GVFS mount URI"
+
+# Jump
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "plugin gvfs -- jump-to-device"
+desc = "Select device then jump to its mount point"
+
+# Jump with automount
+[[mgr.prepend_keymap]]
+on = ["g", "m"]
+run = "plugin gvfs -- jump-to-device --automount"
+desc = "Automount then select device to jump to its mount point"
+
+# Jump back
+[[mgr.prepend_keymap]]
+on = ["`", "`"]
+run = "plugin gvfs -- jump-back-prev-cwd"
+desc = "Jump back to the position before jumped to device"
+
+# Enable automount-when-cd
+[[mgr.prepend_keymap]]
+on = ["M", "t"]
+run = "plugin gvfs -- automount-when-cd"
+desc = "Enable automount when cd to device under cwd"
+
+# Disable automount-when-cd
+[[mgr.prepend_keymap]]
+on = ["M", "T"]
+run = "plugin gvfs -- automount-when-cd --disabled"
+desc = "Disable automount when cd to device under cwd"
+
+###################################
+
+
+[[mgr.prepend_keymap]]
+on = ["c", "a", "a"]
+run = "plugin compress"
+desc = "Archive selected files"
+
+[[mgr.prepend_keymap]]
+on = ["c", "a", "p"]
+run = "plugin compress -p"
+desc = "Archive selected files (password)"
+
+[[mgr.prepend_keymap]]
+on = ["c", "a", "h"]
+run = "plugin compress -ph"
+desc = "Archive selected files (password+header)"
+
+[[mgr.prepend_keymap]]
+on = ["c", "a", "l"]
+run = "plugin compress -l"
+desc = "Archive selected files (compression level)"
+
+[[mgr.prepend_keymap]]
+on = ["c", "a", "u"]
+run = "plugin compress -phl"
+desc = "Archive selected files (password+header+level)"
+
+
+[[mgr.prepend_keymap]]
+on = ["<C-s>"]
+run = "plugin kdeconnect-send"
+desc = "Send selected files via KDE Connect"
+
+ [[mgr.prepend_kymap]]
+ on = ["g", "t"]
+ run = "cd ~/.local/share/Trash/files"
+ desc = "Go to trash"

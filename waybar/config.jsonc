@@ -1,0 +1,117 @@
+{
+  "layer": "top",
+  "position": "left",
+  "width": 20,
+  "spacing": 0,
+  "mode": "hide",
+  "reload_style_on_change": true,
+  "start_hidden": true,
+  "passthrough": false,
+  "on-sigusr1": "toggle",
+  "on-sigusr2": "reload",
+  "modules-left": [
+    "clock"
+  ],
+  "modules-center": [
+    "tray"
+  ],
+  "modules-right": [
+    "battery"
+  ],
+  "hyprland/workspaces": {
+    "format": "{icon}",
+    "on-click": "activate",
+    "format-icons": {
+      // "default": "○",
+      // "active": "●",
+      // "urgent": "!"
+    }
+  },
+  "clock": {
+    "format": "{:%H\n%M}",
+    "tooltip-format": "<tt>{calendar}</tt>"
+  },
+  "cpu": {
+    "interval": 1,
+    "format": "{usage}", // Single letter or icon to save space
+    "tooltip-format": "CPU: {usage}%"
+  },
+  "memory": {
+    "interval": 5,
+    "format": "{percentage}",
+    "tooltip-format": "RAM: {percentage}%"
+  },
+  "network": {
+    "format-wifi": "",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰖪",
+    "format": "?",
+    "tooltip-format": "{essid}"
+  },
+  "pulseaudio": {
+    "format": "{icon}",
+    "format-muted": "󰝟",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
+    "on-click": "pavucontrol"
+  },
+  "battery": {
+    "format": "{icon}",
+    "format-icons": [
+      "󰂎",
+      "󰁺",
+      "󰁻",
+      "󰁼",
+      "󰁽",
+      "󰁾",
+      "󰁿",
+      "󰂀",
+      "󰂁",
+      "󰂂",
+      "󰁹"
+    ],
+    "tooltip-format": "{capacity}%"
+  },
+  "tray": {
+    "icon-size": 14,
+    "spacing": 5
+  },
+  "thermal": {
+    "thermal-zone": 7,
+    "format": "{temperatureC}°",
+    "critical-threshold": 80,
+    "format-critical": " {temperatureC}°"
+  },
+  "custom/gpu-thermal": {
+    "exec": "cat /sys/class/drm/card0/device/hwmon/hwmon*/temp1_input | head -c 2",
+    "format": "GPU {}°",
+    "interval": 1
+  },
+  "custom/playerctl": {
+    "format": "{icon}",
+    "return-type": "json",
+    "max-length": 40,
+    "format-icons": {
+      "Playing": "",
+      "Paused": ""
+    },
+    "exec": "playerctl metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(artist)}} - {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+    "on-click": "playerctl play-pause"
+  },
+  "custom/gpu": {
+    "exec": "/home/engon/.config/waybar/gpu-temp.fish",
+    "format": "{}",
+    "interval": 1
+  },
+  "custom/menu": {
+    "format": "󰣇",
+    "on-click": "nwg-drawer"
+  },
+  "custom/power": {
+    "format": "⏻",
+    "on-click": "nwg-bar"
+  }
+}

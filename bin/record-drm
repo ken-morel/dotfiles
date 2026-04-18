@@ -1,0 +1,91 @@
+#!/usr/bin/env nu
+# requires: sudo setcap cap_sys_admin+ep (which ffmpeg).path.0
+def main [
+    mode: string # What action to perform
+]: nothing -> string {
+    let timestamp = (date now | format date %Y-%m-%d_%H-%M-%S)
+    let output_dir = ($env.HOME | path join Videos)
+    if not ($output_dir | path exists) {
+        try { mkdir $output_dir }
+    }
+    match $mode {
+        "stop" => {
+            print "Stopping recorder..."
+            pkill -2 ffmpeg | complete # Sends SIGINT (like pressing 'q') to save the file properly
+        }
+        "video" => {
+            let file = ($output_dir | path join $"video_($timestamp).mp4")
+            # Hardware accelerated video capture (no audio)
+            # We use .mp4 with h264_vaapi for best compatibility with WhatsApp
+            run-ffmpeg $file false
+        }
+        "audio-video" => {
+            let file = ($output_dir | path join $"full_($timestamp).mp4")
+            # Hardware accelerated video + ALSA audio
+            run-ffmpeg $file true
+        }
+        "audio" => {
+            let file = ($output_dir | path join $"audio_($timestamp).m4a")
+            print $"Recording Audio to ($file)..."
+            ffmpeg -f alsa -re -i default -c:a aac -b:a 128k $file
+        }
+        "screenshot" => {
+            let file = ($env.HOME  | path join $"Pictures/screenshot_($timestamp).png")
+            print $"Taking Screenshot to ($file)..."
+            run-ffmpegscreenshot $file
+        }
+        _ => { print "Usage: record [video | audio-video | audio | screenshot | stop]" }
+    }
+}
+def run-ffmpeg [file: string, include_audio: bool] {
+    print $"Recording to ($file)..."
+    # Base command for KMS capture
+    # We use -thread_queue_size to prevent buffer overflows
+    mut args = [
+        -loglevel
+        error
+        -device
+        /dev/dri/card1
+        -f
+        kmsgrab
+        -framerate
+        20
+        -thread_queue_size
+        1024
+        -i
+        -
+    ]
+    # Add synchronized audio if requested
+    if $include_audio {
+    # -thread_queue_size 1024 is critical for ALSA to stay in sync
+    $args = ($args | prepend [
+        -f
+        alsa
+        -thread_queue_size
+        1024
+        -i
+        default
+    ]) }
+    let enc_args = [
+        -vf
+        "hwmap=derive_device=vaapi,scale_vaapi=format=nv12"
+        -c:v
+        h264_vaapi
+        -qp
+        20
+        -c:a
+        aac
+        -vsync
+        cfr
+        -af
+        "aresample=async=1"
+        -movflags
+        +faststart
+        $file
+    ]
+    ffmpeg ...($args ++ $enc_args)
+}
+
+def run-ffmpegscreenshot [file: string] {
+    ffmpeg -loglevel error -f kmsgrab -device /dev/dri/card1 -i - -frames:v 1 -vf "hwmap=derive_device=vaapi,hwdownload,format=nv12" -c:v png $file
+}

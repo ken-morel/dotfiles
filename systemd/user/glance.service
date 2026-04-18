@@ -1,0 +1,13 @@
+[Unit]
+Description=Glance Dashboard Server
+After=network.target
+
+[Service]
+User=engon
+# Group=your_group
+ExecStart=/home/engon/.config/glance/start-glance.fish
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

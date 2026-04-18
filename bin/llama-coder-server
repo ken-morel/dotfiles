@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+~/.config/llama.cpp/llama-server -m ~/models/qwen2.5-coder-1.5b-q3_k_m.gguf -c 4200 -t 2 -np 1 --mlock --no-mmap --no-direct-io -ctk q8_0 -ctv q8_0  --temp 0 --numa numactl -ub 512 --port 3235 --api-key amemimy --sleep-idle-seconds 36000

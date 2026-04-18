@@ -1,0 +1,7 @@
+[Unit]
+Description=Watch for Waybar config changes and restart Waybar
+Documentation=https://github.com/Alexays/Waybar/wiki
+[Path]
+PathModified=%h/.config/waybar/
+[Install]
+WantedBy=graphical-session.target

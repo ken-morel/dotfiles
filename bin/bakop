@@ -1,0 +1,52 @@
+#!/usr/bin/env -S nu
+
+
+let homefiles = [
+  Desktop
+  Documents
+  Music
+  Pictures
+  Templates
+  apk
+]
+
+let remote = "dropbox:/jealomy"
+let bakop = $"($env.HOME)/bakop"
+
+def backup_config []: any -> nothing {
+  print "Backing up ~/.config..."
+  cd ~/.config
+  zpaqfranz a $"($bakop)/cfait-cal.zpaq" $"($env.HOME)/.config/cfait-cal";
+}
+
+def backup_home [] {
+  print "Backing up ~"
+  cd ~
+  ^zpaqfranz a $"($bakop)/home.zpaq" ...$homefiles
+}
+
+def backup_terraria [] {
+  print "Backing up terraria appdata"
+  cd ~/.local/share/
+  ^zpaqfranz a $"($bakop)/terraria.zpaq" Terraria/
+}
+
+def sync [] {
+  if (^rclone check $bakop $remote --one-way --quiet | complete).exit_code != 0 {
+    print "Uploading files..."
+    ^rclone copy $bakop $remote
+  } else {
+    print "Files already synced"
+  }
+}
+
+
+def main [] {
+  mkdir $bakop
+
+  backup_config
+  backup_home
+  backup_terraria
+  sync
+
+}

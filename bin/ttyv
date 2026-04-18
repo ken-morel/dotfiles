@@ -1,0 +1,148 @@
+#!/usr/bin/env fish
+
+set -g endv_cache_dir "$HOME/.cache/endv"
+
+function pdf-convert-page
+    set -l pdf "$argv[1]"
+    set -l page "$argv[2]"
+    set -l outpath "$argv[3]"
+
+    magick "$pdf"[(math "$page - 1")] -density 1 -quality 1 -flatten -background white "$outpath/$page.png"
+end
+
+function showpdf -d "Display a PDF file interactively" -a file
+    echo "Displaying pdf file...\nCreating cache directory"
+    set -l cache_dir "$endv_cache_dir/$(realpath -- "$file" | string sub -s 2 | string replace -a '/' '_' | string replace -a '.' '-')"
+    mkdir -p -- "$cache_dir"
+
+    echo "Getting pdf info"
+    set -l numpages (pdfinfo "$file" | awk '/Pages/ {print $2}')
+
+    if test $status -ne 0
+        echo "ERROR: Could no get pdf info, the file may be password protected, or you may not have pdfinfo installed" >&2
+        return 1
+    end
+
+    set -l currentpage 1
+
+    cmd=(status filename) $cmd pdf-convert "$file" "$cache_dir" "$numpages" &
+
+    while true
+        set -l pagecache "$cache_dir/$currentpage.png"
+
+        if touch "$pagecache"
+            echo "Converting page $currentpage to png..."
+            pdf-convert-page "$file" "$currentpage" "$cache_dir"
+            if test $status -ne 0
+                echo "ERROR: Could no convert page $currentpage to png" >&2
+                rm -f -- "$pagecache"
+                read -n1 -P "Press any key to continue."
+            end
+        else
+            echo "Showing page from cache"
+            sleep 1
+        end
+
+        fbi -device=/dev/dri/card1 "$pagecache"
+
+        read -n1 -P "(Page $currentpage/$numpages) [n]ext, [p]rev, [q]uit, [x]dg-open, [g]oto, [c]lear cache: " key
+        echo
+
+        switch $key
+            case n N
+                if test $currentpage -lt $numpages
+                    set currentpage (math "$currentpage + 1")
+                end
+            case p P
+                if test $currentpage -gt 1
+                    set currentpage (math "$currentpage - 1")
+                end
+            case q Q
+                break
+            case g G
+                read -P "Enter page index between 1 and $numpages: " input
+                if test (math "$input" 2>/dev/null) -ge 1 -a (math "$input" 2>/dev/null) -le $numpages
+                    set currentpage $input
+                else
+                    echo "Invalid page number."
+                end
+            case c C
+                rm -rf "$cache_dir/*.png"
+            case x X
+                xdg-open "$file"
+        end
+    end
+    echo "Bye!"
+end
+
+function _mpv
+    mpvv $argv[..]
+end
+
+function main
+    if test "$argv[1]" = pdf-convert
+        set -l file "$argv[2]"
+        set -l outpath "$argv[3]"
+        set -l numpages "$argv[4]"
+
+        echo "Stargint bg converter"
+
+        set -l pdfconverterpage 1
+
+        while test $pdfconverterpage -le $numpages
+            pdf-convert-page "$file" "$pdfconverterpage" "$outpath"
+            set -l pdfconverterpage (math $pdfconverterpage + 1)
+        end
+
+    end
+    if ! set -q argv[1]
+        echo "Usage: endv <file>" >&2
+        return 1
+    end
+
+    set -l file "$argv[1]"
+
+    if string match -r "https?\:" "$file"
+        exec w3m $file; or exec lynx $file; or exit 7
+    end
+
+    if not test -f "$file"
+        echo "Error: File not found at '$file'" >&2
+        return 1
+    end
+
+    set -l extension (string split -r -m1 . "$file")[-1]
+
+    switch "$extension"
+        case jpg jpeg png gif webp
+            # _mpv "$file"
+            fbiv "$file"
+        case mp4 avi m4v mki f4v
+            _mpv "$file"
+        case html
+            carbonyl $file
+        case pdf
+            showpdf "$file"
+        case txt log md
+            set html_out (mktemp /tmp/endv-html-content.XXXXX.html)
+            cat $file | pandoc -o - >$html_out
+
+            w3m $html_out
+
+        case mp3 ogg wav oga
+            _mpv "$file"
+        case '*'
+            echo "File type unsuported"
+            read -n1 -P "[x]dg-open, [q]uit: " key
+            switch key
+                case x X
+                    xdg-open "$file"
+                case q Q
+                    return 0
+            end
+
+            return 1
+    end
+end
+
+main $argv

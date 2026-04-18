@@ -1,0 +1,14 @@
+#!/usr/bin/env fish
+
+set output $argv[1]
+set input $argv[2..]
+
+set ext (string split . $output)[-1]
+if ! test "$ext" = iso
+    echo "Invalid syntax, use mkiso output.iso files..."
+    exit 1
+end
+
+echo "Creating iso image $output with files $input"
+
+xorrisofs -o $output -R -J $input

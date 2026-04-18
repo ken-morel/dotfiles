@@ -1,0 +1,24 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:chmod"
+rev = "19dc890"
+hash = "5b2eb0cc2050cec1e4de83cfa51a5b90"
+
+[[plugin.deps]]
+use = "boydaihungst/gvfs"
+rev = "d4b8d83"
+hash = "8767b5484bc3e8fc23796b91e0a102b2"
+
+[[plugin.deps]]
+use = "Deepak22903/kdeconnect-send"
+rev = "7d9098d"
+hash = "498bda3e06d793f79fe1df7b28fc14a1"
+
+[[plugin.deps]]
+use = "hankertrix/augment-command"
+rev = "daeef1d"
+hash = "45e453d9afcf568eda2b0e89115d2465"
+
+[[flavor.deps]]
+use = "ficd0/ashen:ashen"
+rev = "8add1b8"
+hash = "ec4555e1d972062f391c397d339915bb"

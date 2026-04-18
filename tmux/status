@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+cap=$(cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "0")
+
+mode=$(tlp-stat -m | grep -oP '/\K[^ ]+' || echo "unknown")
+
+now=$(date +"%a %b %d %H:%M")
+
+
+battery=$(
+  if [ $(cat /sys/class/power_supply/AC/online) = 1 ]; then
+    echo "↯ "
+  else
+    v=$(cat /sys/class/power_supply/BAT0/voltage_now 2>/dev/null || echo "0")
+    c=$(cat /sys/class/power_supply/BAT0/current_now 2>/dev/null || echo "0")
+    watts=$(awk "BEGIN {printf \"%.2f\", ($v * $c) / 1000000000000}")
+    echo "${watts}W"
+  fi
+)
+
+echo "${cap}% ${battery} ${mode} | ${now}"

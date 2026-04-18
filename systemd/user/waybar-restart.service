@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart Waybar
+Documentation=https://github.com/Alexays/Waybar/wiki
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pkill -USR2 waybar

@@ -1,0 +1,100 @@
+[start]
+visual-home = "http://localhost:6180"
+
+[buffer]
+images = true
+scripting = true
+cookie = true
+referer-from = true
+autofocus = true
+
+[external]
+editor = "hx"
+download-dir = "/home/engon/Downloads"
+copy-cmd = "tee /home/engon/.txt"
+paste-cmd = "cat /home/engon/.txt"
+bookmark = "/home/engon/.config/chawan/bookmarks.md"
+history-file = "/home/engon/.config/chawan/history.uri"
+cookie-file = "/home/engon/.config/chawan/cookies.txt"
+history-size = 1000
+
+[input]
+osc52-copy = true
+link-hint-chars = "jklmasdfghwobceinpqrtuvxyz"
+
+[display]
+image-mode = "kitty"
+color-mode = "true-color"
+# default-background-color = "#101520"
+# default-foreground-color = "#cccccc"
+format-mode = [
+  "bold",
+  "italic",
+  "underline",
+  "reverse",
+  "strike",
+  "strike",
+  "overline",
+]
+alt-screen = true
+# spoils pages like zig-doc using circle char
+# double-width-ambiguous = true
+columns = 195
+lines = 47
+
+[page]
+gh = "pager.buffer.cursorLineBegin()"
+gl = "pager.buffer.cursorLineEnd()"
+gs = "pager.buffer.cursorLineTextStart()"
+
+gI = "pager.buffer.viewImage()"
+
+gt = "pager.buffer.cursorFirstLine()"
+ge = "pager.buffer.cursorLastLine()"
+
+
+L = "pager.nextBuffer()"
+H = "pager.prevBuffer()"
+
+bn = "pager.nextBuffer()"
+bp = "pager.prevBuffer()"
+bd = "pager.dupeBuffer()"
+bq = "pager.discardBuffer()"
+
+C-c = "pager.closeMenu()"
+
+R = "pager.reload()"
+r = "pager.redraw();pager.reshape()"
+
+o = "pager.load()"
+
+w = "pager.buffer.saveSource()"
+
+# pager.buffer.getSelectionText()
+
+ga = "pager.addTab('http://localhost:6180')"
+D = "pager.discardBuffer()"
+
+j = "pager.buffer.scrollDown()"
+k = "pager.buffer.scrollUp()"
+l = "pager.buffer.scrollRight()"
+h = "pager.buffer.scrollLeft()"
+
+K = "pager.nextTab()"
+J = "pager.prevTab()"
+
+
+C-e = "line.openEditor()"
+
+pp = "pager.gotoClipboardURL()"
+yy = "pager.copyURL()"
+yl = "pager.copyCursorLink()"
+yi = "pager.copyCursorImage()"
+
+q = "pager.discardTab()"
+
+':' = "enterCommand"
+']p' = "cursorNextParagraph"
+']l' = "cursorNextLink"
+'[p' = "cursorPrevParagraph"
+'[l' = "cursorPrevLink"

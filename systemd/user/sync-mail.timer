@@ -1,0 +1,10 @@
+[Unit]
+Description=Run sync-mail.service every 5 minutes
+
+[Timer]
+OnBootSec=5min
+OnUnitInactiveSec=10min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,6 @@
+[Unit]
+Description=Sync and index mail
+
+[Service]
+Type=oneshot
+ExecStart=/home/engon/.config/bin/sync-mail

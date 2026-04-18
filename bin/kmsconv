@@ -1,0 +1,94 @@
+#!/usr/bin/env -S nu
+
+# Displays a file on terminal using kitty graphics or on framebuffer
+
+def "main elsewhere" [
+  cmd: string,
+]: nothing -> nothing {
+    let orig =  sudo fgconsole
+    sudo openvt -c 10 -s -w -f -- nu -c $cmd
+    sudo chvt $orig
+    sudo deallocvt
+
+}
+
+def "main mpv" [
+  file: path, # file to view with mpv
+]: nothing -> nothing {
+    main elsewhere $"mpv --vo=drm ($file)"
+    # let orig =  sudo fgconsole
+    # sudo openvt -c 10 -s -w -f --
+    # sudo chvt $orig
+    # sudo deallocvt
+}
+
+
+def "main image" [
+  file: path, # The file to display
+]: nothing -> nothing {
+  mut file = $file;
+  match ($file | path parse).extension {
+      "webm" => {
+      let tmp = mktemp "/tmp/tmp.XXXX.gif";
+      magick $file gif:- | save $tmp
+      $file = $tmp;
+    }
+    "svg" | "bmp" | "tiff" => {
+      let tmp = mktemp "/tmp/tmp.XXXX.png";
+      magick $file png:- | save $tmp
+      $file = $tmp;
+
+    }
+  }
+  fbiv $file
+}
+
+def "main video" [
+  file: path, #The video to display
+]: nothing -> nothing {
+  main mpv $file
+}
+
+def "main audio" [
+  file: path, # The audio file to play
+]: nothing -> nothing {
+  mpv -vo=null $file
+}
+
+def "main pdf" [
+  file: path, # The pdf file to view
+]: nothing -> nothing {
+  main elsewhere $"sudo fbpdf -d /dev/dri/card1 `($file)`"
+}
+
+def main [
+  file: path # The file to display
+]: nothing -> nothing {
+  mut file = $file;
+  if ($file | str starts-with '"') {
+    $file = $file | str substring 1..-1
+  }
+  if ($file | str ends-with '"') {
+    $file = $file | str substring 0..-2
+  }
+
+  match ($file | path parse).extension {
+    "png" | "svg" | "bmp" | "tiff" | "webm" | "gif" => {
+      main image $file
+    }
+    "mp4" | "mpv" | "mkv" | "m4a" | "f4v" => {
+      main video $file
+    }
+    "flaac" | "mp3" | "ogg" | "oga" | "wav" => {
+      main audio $file
+    }
+    "pdf" => {
+      main pdf $file
+    }
+    $f => {
+      print $"Can't open file of type ($f) ($file) "
+    }
+
+  }
+  input "Hit enter..."
+}

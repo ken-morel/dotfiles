@@ -1,0 +1,46 @@
+# Cfait Configuration
+
+# --- Connection Settings ---
+# URL: The full address to your CalDAV server endpoint.
+url = ""
+username = ""
+password = ""
+allow_insecure_certs = false # Boolean: Set true to bypass SSL verification (e.g. self-signed certs).
+# List of calendar HREFs (strings) to completely disable/ignore.
+disabled_calendars = []
+hide_completed = false            # Boolean: If true, Completed/Cancelled tasks are hidden globally.
+strikethrough_completed = true    # Boolean: Apply strikethrough styling to completed task titles.
+hide_fully_completed_tags = false # Boolean: Hide tags in sidebar if all their tasks are completed.
+
+# --- Sorting & Ranking Logic ---
+sort_cutoff_months = 2        # Integer/None: Tasks due beyond this many months are ranked lower.
+theme = "RustyDark"           # String: GUI Theme (RustyDark, Light, Dark, Dracula, Nord, etc).
+urgent_days_horizon = 1       # Integer: Tasks due within this many days are considered 'Urgent'.
+urgent_priority_threshold = 2 # Integer (1-9): Priorities <= this value are 'Urgent'. (1=High)
+default_priority = 7          # Integer (1-9): Default priority for new tasks. 0 maps to this.
+start_grace_period_days = 7   # Integer: Future tasks appear in the list this many days before start.
+
+# --- Notifications & Reminders ---
+auto_reminders = true           # Boolean: Auto-remind on Due/Start dates if no explicit alarms exist.
+default_reminder_time = "08:00" # String (HH:MM): Default time for date-only auto-reminders.
+snooze_short_mins = 60          # Integer: Minutes for the 'Short Snooze' button.
+snooze_long_mins = 1440         # Integer: Minutes for the 'Long Snooze' button.
+
+# --- Calendar Integration (VEVENT Sync) ---
+create_events_for_tasks = false     # Boolean: Create companion VEVENTs on server for tasks with dates.
+delete_events_on_completion = false # Boolean: Remove the companion VEVENT when task is completed.
+auto_refresh_interval_mins = 30     # Integer: Background sync interval in minutes. 0 to disable.
+trash_retention_days = 14           # Integer: Days to keep deleted items in local trash before permanent delete. 0 disables trash.
+
+# --- Advanced Performance Settings ---
+max_done_roots = 20               # Integer: Limit completed root tasks shown before 'Expand' button.
+max_done_subtasks = 5             # Integer: Limit completed subtasks shown in a parent before 'Expand'.
+show_ongoing_notifications = true # Boolean: Display ongoing timer notification for active tasks.
+# List of calendar HREFs currently toggled 'off' in the sidebar.
+hidden_calendars = []
+
+
+# --- Aliases (Global Templates) ---
+# Map shortcuts to sets of tags/locations/priorities.
+# Example: "#gardening" = ["#fun", "@@home"]
+[tag_aliases]

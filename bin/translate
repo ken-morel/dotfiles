@@ -1,0 +1,98 @@
+#!/usr/bin/env fish
+
+set MODEL deepseek-r1-distill-qwen-1.5b-q8
+#  qwen2.5-instruct-1.5b
+
+if test "$argv[1]" = serve
+    rm -rf /tmp/translate-apikey-*
+    set api /tmp/translate-apikey-(random)
+    touch $api
+
+    echo "api key: $api"
+
+    llama-server -m ~/models/$MODEL.gguf \
+        --ctx-size 500 \
+        --threads 1 \
+        --threads-batch 1 \
+        --threads-http 1 \
+        --batch-size 1 \
+        --ubatch-size 1 \
+        --n-gpu-layers 1 \
+        --mmap \
+        --no-webui \
+        --api-key $api \
+        --port 8283
+    exit 0
+end
+
+# Configuration
+set API_BASE "http://localhost:8283/v1"
+set API_KEY (ls /tmp/translate-apikey-*)
+
+if test "$API_KEY" = ""
+    echo "Api key file not found, server is surely not running"
+end
+
+# Dependencies check
+if not command -q jq
+    echo "Error: 'jq' is required." >&2
+    exit 1
+end
+
+# Arguments: Only target_lang is required now
+if test (count $argv) -lt 1
+    echo "Usage: echo 'text' | translate <target_lang> [<model>]" >&2
+    echo "Example: echo 'Hello' | translate French" >&2
+    exit 1
+end
+
+set TARGET_LANG $argv[1]
+
+# Read from pipe
+read -z TEXT
+if test -z "$TEXT"
+    echo "Error: No input text provided." >&2
+    exit 1
+end
+
+# System prompt updated for Auto-Detection
+set SYSTEM_PROMPT "You are a professional translator, who takes his time to reflect on the text to translate to give the best possible translation. Detect the source language of the input and translate it completely into $TARGET_LANG. Output ONLY the full translated text. No quotes, no explanations, no labels."
+
+# Construct JSON
+set JSON_DATA (jq -n \
+    --arg model "$MODEL" \
+    --arg sys "$SYSTEM_PROMPT" \
+    --arg user "$TEXT" \
+    '{
+        model: $model,
+        messages: [
+            {role: "system", content: $sys},
+            {role: "user", content: $user}
+        ],
+        temperature: 0.1,
+        max_tokens: 1024
+    }')
+
+# API Call
+set RESPONSE (curl -s -X POST "$API_BASE/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $API_KEY" \
+    -d "$JSON_DATA")
+
+if test $status -ne 0
+    echo "Error: Could not connect to API at $API_BASE" >&2
+    exit 1
+end
+
+# Extract and Clean Output
+# set TRANSLATED (echo "$RESPONSE" | jq -r '.choices[0].message.content')
+echo $RESPONSE | jq -r '.choices[0].message.content' | read -z TRANSLATED | string trim
+
+if test "$TRANSLATED" = null -o -z "$TRANSLATED"
+    echo "Error: API returned an empty result." >&2
+    exit 1
+end
+
+echo "$RESPONSE"
+
+echo "$TRANSLATED"

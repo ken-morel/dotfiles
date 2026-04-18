@@ -1,0 +1,68 @@
+# https://github.com/Deepak22903/kdeconnect-send.yazi
+# https://github.com/boydaihungst/gvfs.yazi?tab=readme-ov-file
+# https://github.com/KKV9/compress.yazi
+[mgr]
+# ration = [1, 4, 2]
+sort_by = "mtime"
+sort_reverse = true
+sort_dir_first = true
+linemode = "size_and_mtime"
+# show_hidden = true
+show_symlink = true
+mouse_events = []
+title_format = "yazi@{cwd}"
+
+[preview]
+wrap = "no"
+tab_size = 2
+image_delay = 100
+
+[opener]
+hx = [
+  { run = '$EDITOR "$@"', block = true, for = "unix", desc = "Open with editor" },
+]
+endv = [{ run = 'endv "$1"', block = true, desc = "Open with endv" }]
+jnx = [{ run = 're.sonny.Junction "$@"', desc = "Open with junction" }]
+xdg = [{ run = 'xdg-open "$@"', desc = "Open with xdg-open" }]
+set-wallpaper = [
+  { run = 'swww img "$1"', for = "linux", desc = "Set as wallpaper", orphan = true },
+]
+extract = [
+    { run = 'ya pub augmented-extract --list "$@"', desc = "Extract here", for = "unix" },
+    { run = 'ya pub augmented-extract --list %*',   desc = "Extract here", for = "windows" },
+]
+
+
+
+# Linux: Swaybg
+[open]
+prepend_rules = [
+  { mime = "*/*", use = ["xdg","hx", "extract", "set-wallpaper"] },
+]
+append_rules = [
+]
+
+[plugin]
+prepend_preloaders = [
+  # Do not preload files in mounted locations:
+  # Environment variable won't work here.
+  # Using absolute path instead.
+  { name = "/run/user/1000/gvfs/**/*", run = "noop" },
+
+  # For mounted hard disk/drive
+  { name = "/run/media/engon/**/*", run = "noop" },
+]
+prepend_previewers = [
+  # Allow to preview folder.
+  { name = "*/", run = "folder" },
+
+  # Do not previewing files in mounted locations.
+  # Uncomment the line below to allow previewing text files.
+  # { mime = "{text/*,application/x-subrip}", run = "code" },
+
+  # Using absolute path.
+  { name = "/run/user/1000/gvfs/**/*", run = "noop" },
+
+  # For mounted hard disk/drive.
+  { name = "/run/media/USER_NAME/**/*", run = "noop" },
+]

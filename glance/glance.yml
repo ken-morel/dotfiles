@@ -1,0 +1,260 @@
+auth:
+  secret-key: FU5S5uAxiToDy7Spi2/MfqFHrIM4wpvL9RlmbGL8ZB6yVFavPM6alSEIP57adkc8nMnAMPPUr4YlJBfIZNs5Bg==
+  users:
+    engon:
+      password-hash: $2a$10$gBlpf.9OgkSy1L8EzmlyU.SfD4qamRD3gSircr/ewYl1Lu5xxB2WO
+server:
+  port: ${GLANCE_PORT}
+  assets-path: ${GLANCE_CONFIG_HOME}/assets
+document:
+  head: |
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZV3F2J3GD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-8ZV3F2J3GD');
+    </script>
+theme:
+  background-color: 50 1 6
+  primary-color: 157 47 65
+  contrast-multiplier: 1.1
+  positive-color: 96 44 68
+  negative-color: 359 68 71
+  custom-css-file: ${GLANCE_CONFIG_HOME}/glance.css
+define: &page
+  center-vertically: true
+  show-mobile-header: false
+pages:
+  - name: Home
+    !!merge <<: *page
+    slug: home
+    width: wide
+    head-widgets:
+      - type: split-column
+        max-columns: 3
+        widgets:
+          - type: custom-api
+            title: Random Fact
+            cache: 1h
+            url: https://uselessfacts.jsph.pl/api/v2/facts/random
+            template: |
+              <p class="size-h4 color-paragraph">
+                {{ .JSON.String "text" }}
+              </p>
+          - type: search
+            search-engine: google
+            autofocus: true
+            bangs:
+              - title: YouTube
+                shortcut: "!yt"
+                url: https://www.youtube.com/results?search_query={QUERY}
+              - title: BIng
+                shortcut: "!b"
+                url: https://www.bing.com/search?q={QUERY}
+          - type: server-stats
+            servers:
+              - type: local
+                name: Jealomy
+          - type: weather
+            units: metric
+            hour-format: 12h
+            location: Yaoundé
+            show-area-name: true
+          - type: custom-api
+            url: https://meme-api.com/gimme
+            cache: 1h
+            template: |
+              <div id="ama-custom-api-meme-1" style="background: var(--color-widget-background); overflow: hidden;  width: 100%; margin: auto;">
+                  <a href="{{ .JSON.String "preview.2" }}" target="_blank" style="display: block; cursor: zoom-in; text-decoration: none;">
+                      <div style="width: 100%; height: 207px; overflow: hidden; background-color: #000;">
+                           <img src="{{ .JSON.String "preview.2" }}" style="width: 100%; height: 100%; object-fit: cover; display: block;" alt="Click to expand" />
+                      </div>
+                  </a>
+                  <div style="padding: 12px;">
+                      <p class="size-h5 color-paragraph" style="margin: 0; text-align: center; font-weight: 600;">
+                           {{ .JSON.String "title" }}
+                      </p>
+                  </div>
+              </div>
+    columns:
+      - size: small
+        widgets:
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Paris
+                label: Paris
+              - timezone: America/New_York
+                label: New York
+              - timezone: Asia/Tokyo
+                label: Tokyo
+          - type: calendar
+          - type: to-do
+            id: main-todo
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: gama site
+                url: https://gama.engon.cm
+              - title: portfolio
+                url: https://engon.cm
+              - title: jealomy ts
+                url: https://jealomy.tetra-exponential.ts.net
+          - type: releases
+            show-source-icon: true
+            repositories:
+              - ken-morel/gama
+              - ken-morel/rrr
+              - ken-morel/alat
+              - ken-morel/arb-util
+      - size: full
+        widgets:
+          - type: custom-api
+            title: Seasonal Anime
+            frameless: true
+            cache: 1d
+            url: https://api.jikan.moe/v4/seasons/now
+            template: |
+              {{ $arr := .JSON.Array "data" }}
+              <div style="overflow-x: auto; padding: 8px 0;">
+                <div class="cards-horizontal carousel-items-container" style="display: flex; gap: 16px; padding: 0 8px;">
+                  {{ range $i, $el := $arr }}
+                    {{ if lt $i 15 }}
+                      {{ $image := $el.String "images.jpg.image_url" }}
+                      {{ $score := $el.Float "score" }}
+                      {{ $type := $el.String "type" }}
+                      {{ $episodes := $el.Int "episodes" }}
+
+                      <a href="{{ $el.String "url" }}" target="_blank"
+                        class="card widget-content-frame"
+                        style="flex: 0 0 auto; width: 150px; min-height: 260px; display: flex; flex-direction: column; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1); background: var(--card-bg); text-decoration: none;">
+
+                        <!-- Thumbnail with Score -->
+                        <div style="height: 190px; overflow: hidden; position: relative;">
+                          <img src="{{ $image }}" alt="{{ $el.String "title" }}"
+                              style="width: 100%; height: 100%; object-fit: cover; object-position: center;"
+                              onerror="this.style.display='none'">
+                          {{ if gt $score 0.0 }}
+                          <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.9); color: white; padding: 3px 8px; border-radius: 12px; font-weight: bold; backdrop-filter: blur(4px); font-size: 11px;">
+                            ⭐ {{ $score }}
+                          </div>
+                          {{ end }}
+                        </div>
+
+                        <!-- Content -->
+                        <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 70px;">
+                          <div class="size-base color-primary"
+                              style="line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; margin-bottom: 8px;">
+                            {{ $el.String "title" }}
+                          </div>
+
+                          <div class="size-h6" style="display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                              <span>Type:</span>
+                              <span>{{ $type }}</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                              <span>{{ if $episodes }}{{ $episodes }} Episodes{{ else }}Airing{{ end }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    {{ end }}
+                  {{ end }}
+                </div>
+              </div>
+          - type: repository
+            repository: ken-morel/gama
+            pull-requests-limit: 5
+            issues-limit: 3
+            commits-limit: 3
+          - type: repository
+            repository: ken-morel/rrr
+            pull-requests-limit: 5
+            issues-limit: 3
+            commits-limit: 3
+          - type: hacker-news
+            limit: 40
+            collapse-after: 10
+          - type: bookmarks
+            groups:
+              - title: Quick
+                color: 12 12 24
+                links:
+                  - title: Gmail
+                    url: https://gmail.com
+                    icon: si:gmail
+                  - title: Youtube
+                    url: https://youtube.com
+                    icon: si:youtube
+          - type: rss
+            title: Feeds
+            style: detailed-lists
+            feeds:
+              - url: https://github.com/ken-morel/gama/commits/main.atom
+                title: gama main
+              - url: https://github.com/ken-morel/gama/commits/dev.atom
+                title: gama dev
+  - name: Links & Bookmarks
+    !!merge <<: *page
+    slug: links
+    width: slim
+    columns:
+      - size: full
+        widgets:
+          - type: bookmarks
+            groups:
+              - links: []
+  - name: Videos
+    !!merge <<: *page
+    slug: videos
+    columns:
+      - size: full
+        widgets:
+          - type: videos
+            channels:
+              - UCGKEMK3s-ZPbjVOIuAV8clQ # Core dumped
+              - UCEbYhDd6c6vngsF5PQpFVWg # tsoding
+              - UCbKWv2x9t6u8yZoB3KcPtnw # alan becker
+              - UCS0e_WWWKtHFrNY1Es-ceUQ # mafa
+              - UCz75RVbH8q2jdBJ4SnwuZZQ # blender studio
+              - UCdp4_l1vPmpN-gDbUwhaRUQ # branch education
+              - UC9IuUwwE2xdjQUT_LMLONoA # julia lang
+              - UCYnvxJ-PKiGXo_tYXpWAC-w # MIcode
+              - UCWedHS9qKebauVIK2J7383g # underscore_
+              - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasum
+              - UCSDU975BassXQZGoJmvctNQ # Explainer chris
+              - UCYO_jab_esuFRV4b17AJtAw # 3blue1brown
+            style: grid-cards
+  - name: Feeds
+    columns:
+      - size: full
+        widgets:
+          - type: rss
+            title: News
+            style: detailed-lists
+            feeds:
+              - url: https://feeds.bloomberg.com/markets/news.rss
+                title: Bloomberg
+              - url: https://moxie.foxbusiness.com/google-publisher/markets.xml
+                title: Fox Business
+              - url: https://moxie.foxbusiness.com/google-publisher/technology.xml
+                title: Fox Business
+      - size: full
+        widgets:
+          - type: hacker-news
+            limit: 40
+            collapse-after: 10
+  - name: Tools
+    columns:
+      - size: full
+        widgets:
+          - type: group
+            widgets:
+              - type: iframe
+                source: https://it-tools-a6az.onrender.com
+                height: 728

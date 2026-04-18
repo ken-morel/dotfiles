@@ -1,0 +1,152 @@
+# Inspired by yo
+# https://github.com/mrmcc3/yo-theme-helix
+
+# background/text
+"ui.background" = { fg = "p11", bg = "bg" }
+"ui.background.separator" = { fg = "ui_bg" }
+"ui.text" = { fg = "p10" }
+"ui.text.focus" = { fg = "p12", bg = "ui_bg_selected" }
+# popups/menus
+"ui.window" = { fg = "p7" }
+"ui.popup" = { fg = "p12", bg = "ui_bg_dark" }
+"ui.popup.info" = { fg = "p12", bg = "ui_bg_dark" }
+"ui.text.info" = { fg = "p12", bg = "ui_bg_dark" }
+"ui.help" = { fg = "p12", bg = "ui_bg_dark" }
+"ui.menu" = { fg = "p11", bg = "ui_bg_dark" }
+"ui.menu.selected" = { fg = "p12", bg = "ui_bg_selected" }
+"ui.menu.scroll" = { fg = "p8", bg = "ui_bg" }
+"ui.picker.header.column" = { underline.style = "line" }
+"ui.highlight" = { bg = "select" }
+# cursor/selection
+"ui.cursor" = { fg = "p2", bg = "p11" }
+"ui.cursor.insert" = { fg = "p2", bg = "keyword" }
+"ui.cursor.select" = { bg = "dim_cursor" }
+"ui.cursor.match" = { fg = "cursor", modifiers = ["bold"] }
+"ui.cursor.primary" = { fg = "p12", bg = "cursor" }
+"ui.cursor.primary.insert" = { fg = "p12", bg = "cursor" }
+"ui.cursor.primary.select" = { fg = "p12", bg = "cursor" }
+"ui.selection" = { bg = "p3_blue" }
+"ui.selection.primary" = { bg = "p6_purple" }
+"ui.cursorline.primary" = { bg = "p2" }
+"ui.cursorcolumn.primary" = { bg = "p3" }
+# line numbers / diff
+"ui.gutter" = { bg = "ui_bg_dark" }
+"ui.linenr" = { fg = "p8" }
+"ui.linenr.selected" = { fg = "p12" }
+"diff" = { fg = "p8" }
+"diff.plus" = { fg = "diff_add" }
+"diff.delta" = { fg = "warning" }
+"diff.minus" = { fg = "error" }
+# bufferline/statusline
+"ui.bufferline" = { fg = "p10", bg = "ui_bg" }
+"ui.bufferline.active" = { fg = "p12", bg = "ui_bg_selected" }
+"ui.statusline" = { fg = "p11", bg = "ui_bg" }
+"ui.statusline.inactive" = { fg = "p11", bg = "ui_bg_dark" }
+"ui.statusline.normal" = { fg = "p12" }
+"ui.statusline.insert" = { fg = "p12" }
+"ui.statusline.select" = { fg = "p12" }
+"ui.statusline.separator" = { fg = "p7" }
+# virtual
+"ui.virtual" = { fg = "p6" }
+"ui.virtual.ruler" = { bg = "p3" }
+"ui.virtual.inlay-hint" = { fg = "p7", modifiers = ["italic"] }
+"ui.virtual.jump-label" = { fg = "cursor" }
+"ui.virtual.whitespace" = { fg = "p4" }
+# diagnostics
+error = { fg = "error" }
+warning = { fg = "warning" }
+# TODO:
+# info = { fg = "warning" }
+info = { fg = "docs_highlight" }
+hint = { fg = "hint", modifiers = ["dim"] }
+"diagnostic.error" = { underline = { color = "error", style = "curl" } }
+"diagnostic.warning" = {  }
+# TODO: do we need this? commented out for a reason I think
+# "diagnostic.info" = { fg = "info", modifiers = ["bold"] }
+"diagnostic.hint" = {  }
+"diagnostic.deprecated" = { modifiers = ["crossed_out"] }
+"diagnostic.unnecessary" = { modifiers = ["dim"] }
+tabstop = { bg = "p6_purple" }
+# code
+comment = { fg = "info" }
+"comment.line.documentation" = { fg = "docs" }
+"comment.block" = { fg = "docs" }
+keyword = { fg = "keyword" }
+"keyword.storage.modifier.mut" = { fg = "error" }
+operator = { fg = "keyword" }
+string = { fg = "string" }
+"string.special.symbol" = { fg = "constant" }
+constant = { fg = "constant" }
+variable = { fg = "p10_orange" }
+namespace = { fg = "p8" }
+punctuation = { fg = "p9" }  # ([{}])
+"punctuation.delimiter" = { fg = "p8" }  # ,;:
+function = { fg = "p11_blue" }
+# "function.builtin" = "p8"
+# "function.special" = "p8"
+# "function.macro" = "p8"
+"special" = "p11_blue"
+attribute = { fg = "p10" }
+tag = { fg = "keyword" }
+label = { fg = "p12" }
+constructor = { fg = "p12_orange" }
+type = { fg = "p12_orange" }
+"local" = { underline = { color = "info", style = "curl" } }
+# markup
+"markup" = "docs_highlight"
+"markup.bold" = { fg = "docs_highlight", modifiers = ["bold"] }
+"markup.italic" = { fg = "docs_highlight", modifiers = ["italic"] }
+"markup.strikethrough" = { modifiers = ["crossed_out"] }
+"markup.heading" = { fg = "info", modifiers = ["bold"] }
+"markup.heading.2" = { fg = "string", modifiers = ["bold"] }
+"markup.heading.3" = { fg = "constant", modifiers = ["bold"] }
+"markup.heading.4" = { fg = "warning", modifiers = ["bold"] }
+"markup.heading.marker" = { fg = "p8" }
+"markup.list" = { fg = "string" }
+"markup.link.url" = { underline.style = "line" }
+"markup.link.label" = { underline.style = "dotted" }
+
+# https://www.radix-ui.com/colors
+[palette]
+cursor = "#ff00ff"
+dim_cursor = "#7b007b"
+bg = "#000312"
+# buffer/status
+ui_bg = "#242f44"
+ui_bg_dark = "#050b1d"
+ui_bg_selected = "#102a70"
+select = "#061541"
+info = "#05a6a3"  # blue-tinted teal-10
+constant = "#7f94ff"  # dark blue adjusted cyan-10
+string = "#ee518a"  # crimson-10
+diff_add = "#33b074"  # green-10
+hint = "#3b9eff"  # blue-10
+error = "#d7004b"
+warning = "#cd6000"
+keyword = "#b68067"  # more chromatic bronze dark-10
+mut = "#c76f8b"  # hand picked pink that's slightly more emphasized
+docs = "#437573"
+# docs_highlight = "#89805a"
+docs_highlight = "#a58f23"
+# shades of gray
+p1 = "#111111"
+p2 = "#191919"
+p3 = "#222222"
+p3_blue = "#132042"
+p4 = "#2a2a2a"
+p5 = "#313131"
+p6 = "#3a3a3a"
+# p6_blue = "#2a395d"
+p6_purple = "#4d2d4c"
+p7 = "#484848"
+p8 = "#606060"
+p9 = "#6e6e6e"
+p10 = "#7b7b7b"
+p11 = "#b4b4b4"
+p11_green = "#8cc0bd"
+p12 = "#eeeeee"
+# tinted
+p11_blue = "#a6b2d3"
+p10_orange = "#807970"
+p11_orange = "#c8ae91"
+p12_orange = "#ffe9d2"

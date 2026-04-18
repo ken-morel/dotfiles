@@ -1,0 +1,9 @@
+#!/usr/bin/env -S nu
+
+def main [path]: nothing -> nothing {
+    let orig =  sudo fgconsole
+    sudo openvt -c 10 -s -w -f -- (which mpv).path.0 --vo=drm $path
+    sudo chvt $orig
+    sudo deallocvt
+
+}

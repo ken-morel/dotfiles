@@ -1,0 +1,12 @@
+[Unit]
+Description=Battery status notifier
+After=systemd-user-sessions.service
+
+[Service]
+User=engon
+ExecStart=batsignal -d 10 -c 25 -w 40 -p -D "systemctl hibernate" -M "tmux-notify -a batsignal '%s' 'Battery at: %s%%'"
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

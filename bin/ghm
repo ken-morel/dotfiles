@@ -1,0 +1,28 @@
+#!/usr/bin/fish
+
+set -g model "$argv[1]"
+
+switch "$model"
+    case d3
+        set -g model deepseek/DeepSeek-V3-0324
+    case dr1 d1 d
+        set -g model deepseek/DeepSeek-R1-0528
+    case ""
+        echo "No model specified"
+        exit 1
+end
+
+set -g system "$argv[2]"
+
+switch "$system"
+    case c
+        set -g system "You are a helpfull coding assistant"
+    case "" a
+        set -g system "You are a helpful assistant."
+end
+
+gh models run "$model" \
+    --system-prompt "$system" \
+    --temperature 1.0 \
+    --top-p 1.0 \
+    (cat)

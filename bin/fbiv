@@ -1,0 +1,6 @@
+#!/usr/bin/fish
+
+set orig (sudo fgconsole)
+sudo openvt -c 10 -s -w -f -- fbi -device=/dev/dri/card1 $argv
+sudo chvt $orig
+sudo deallocvt

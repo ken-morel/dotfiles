@@ -1,0 +1,11 @@
+-d
+10
+-c
+25
+-w
+40
+-p
+-D
+systemctl hibernate
+-M
+tmux-notify -a batsignal '%s' 'Battery at: %s%%'

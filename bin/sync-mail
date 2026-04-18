@@ -1,0 +1,9 @@
+#!/usr/bin/env fish
+
+if pgrep -x mbsync >/dev/null
+    exit 0
+end
+
+mbsync -a; and notmuch new
+
+# tmux-notify sync-mail "Synchronized mails"

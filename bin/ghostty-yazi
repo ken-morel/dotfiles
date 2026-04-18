@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+ghostty --background-blur=false --background-opacity=0.8 --foreground=#AAFFCC  -e yazi

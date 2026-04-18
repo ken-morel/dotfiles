@@ -1,0 +1,28 @@
+[profiles.default]
+user_id = "@ken-morel:beeper.com"
+url = "https://matrix.beeper.com"
+
+[profiles.matrix]
+user_id = "@ken-morel:matrix.org"
+url = "https://matrix.org"
+
+
+[settings]
+external_edit_file_suffix = "md"
+image_preview = {protocol = {type="kitty"}}
+log_level = "error"
+messages_shortcodes_display = true
+normal_after_send = true
+open_command = ["endv"]
+read_receipt_send = false
+read_receipt_display = true
+
+
+state_event_display = true
+typing_notice_send = true
+typing_notice_display = true
+username_display = "displayname"
+user_gutter_width = 40
+tabstop = 2
+notifications ={enabled = true, via = "desktop|bell"}
+sort = {rooms = ["invite","unread", "recent"]}

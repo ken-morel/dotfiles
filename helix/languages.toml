@@ -1,0 +1,437 @@
+# -------------------------------------------- wakatime
+[language-server.wakatime]
+command = "wakatime-ls"
+
+[[language]]
+name = "slint"
+auto-format = true
+formatter = { command = "slint-lsp", args = ["format", "/dev/stdin"] }
+language-servers = [
+  "slint-lsp",
+  "lsp-ai",
+  "wakatime",
+  "fs-watcher",
+  "typos",
+  "copilot-lsp",
+  "codebook-lsp",
+]
+
+# -------------------------------------------- julia
+[[language]]
+name = "julia"
+auto-format = true
+formatter = { command = "runic" }
+language-servers = [
+  "jetls",
+  "relint",
+  "lsp-ai",
+  "wakatime",
+  "typos",
+  "copilot-lsp",
+  "codebook-lsp",
+  "fs-watcher",
+]
+
+[language-server.jetls]
+command = "jetls"
+args = ["--threads=auto", "--"]
+timeout = 180
+
+[language-server.relint]
+command = "/home/engon/bin/relint"
+
+# -------------------------------------------- toml
+
+[[language]]
+name = "toml"
+roots = ["."]
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "taplo",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "dprint",
+]
+
+auto-format = true
+
+[language-server.taplo]
+command = "taplo"
+args = ["lsp", "stdio"]
+
+[language-server.dprint]
+command = "dprint"
+args = ["lsp"]
+
+# -------------------------------------------- v
+[[language]]
+name = "v"
+file-types = [{ glob = "*.v" }]
+language-servers = [
+  "v-analyzer",
+  "lsp-ai",
+  "wakatime",
+  "typos",
+  "copilot-lsp",
+  "codebook-lsp",
+  "fs-watcher",
+]
+formatter = { command = "v", args = ["fmt", "-w"] }
+auto-format = true
+shebangs = ["v"]
+
+[language-server.vls]
+command = "/usr/bin/vls"
+[language-server.v-analyzer]
+command = "/home/engon/apps/v-analyzer/bin/v-analyzer"
+
+# -------------------------------------------- yaml
+
+# [language-server.yaml-language-server.config.yaml]
+# format = { enable = true }
+# validation = true
+
+# [language-server.yaml-language-server.config.yaml.schemas]
+# "https://json.schemastore.org/github-workflow.json" = ".github/workflows/*.{yml,yaml}"
+# "https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-tasks.json" = "roles/{tasks,handlers}/*.{yml,yaml}"
+
+# [language-server.gh-actions-language-server]
+# command = 'gh-actions-language-server'
+# args = ['--stdio']
+# config = { sessionToken = ""}
+
+# [[language]]
+# name = "yaml"
+# file-types = [{ glob = ".github/workflows/*.yml" }, { glob = ".github/workflows/*.yaml" }]
+# language-servers = ["typos","copilot-lsp", "gh-actions-language-server", "yaml-language-server"]
+# roots = [".github", ".git"]
+
+# ---------------------------------------------  python
+
+[[language]]
+name = "python"
+language-servers = [
+  "pyright",
+  "ruff",
+  "lsp-ai",
+  "typos",
+  "copilot-lsp",
+  "wakatime",
+  "fs-watcher",
+  "codebook-lsp",
+]
+auto-format = true
+[language-server.pyright.config.python.analysis]
+typeCheckingMode = "basic"
+[language-server.ruff]
+command = "ruff"
+args = ["server"]
+[language-server.pylyzer]
+command = "pylyzer"
+args = ["--server"]
+
+# ----------------------------------------------- dart
+[[language]]
+name = "dart"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "dart",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+
+[language.debugger]
+name = "dart"
+transport = "stdio"
+command = "flutter"
+args = ["debug-adapter"]
+
+[[language.debugger.templates]]
+name = "launch"
+request = "launch"
+completion = [
+  { name = "entrypoint", completion = "filename", default = "lib/main.dart" },
+]
+args = { program = "{0}" }
+
+[[language]]
+name = "efus"
+scope = "source.efus"
+file-types = ["efus"]
+comment-token = "#"
+grammar = "efus" # This name must match the grammar section below
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+
+[[language]]
+name = "fish"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "fish-lsp",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+
+[[language]]
+file-types = [{ glob = "*.h" }, { glob = "*.c" }, { glob = "*.h" }]
+name = "c"
+language-servers = [
+  "lsp-ai",
+  "clangd",
+  "typos",
+  "copilot-lsp",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+]
+# formatter = { command = "clang-format"}
+auto-format = true
+
+[language-server.clangd]
+command = "clangd"
+args = [
+  "--clang-tidy",
+  "--completion-style=detailed",
+  "--header-insertion=iwyu",
+]
+
+[[language]]
+name = "cpp"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "clangd",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+
+[[language]]
+name = "html"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "vscode-html-language-server",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "superhtml",
+  "emmet-ls",
+  "lsp-ai",
+]
+auto-format = true
+
+[[language]]
+name = "css"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "vscode-css-language-server",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+
+[[language]]
+name = "javascript"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "typescript-language-server",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+
+[[language]]
+name = "typescript"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "typescript-language-server",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+
+[[language]]
+name = "svelte"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "svelteserver",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+  "lsp-ai",
+]
+auto-format = true
+indent = { tab-width = 2, unit = " " }
+
+# [[language]]
+# name = "sass"
+# language-servers = [
+#   "typos","copilot-lsp",
+#   "wakatime",
+#   "codebook-lsp",
+#   "fs-watcher",
+# ]
+# auto-format = true
+# indent = { tab-width = 2, unit = " " }
+
+[[language]]
+name = "json"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "vscode-json-language-server",
+  "wakatime",
+  "codebook-lsp",
+  "fs-watcher",
+]
+auto-format = true
+
+[[language]]
+name = "go"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "gopls",
+  "golangci-lint-lsp",
+  "codebook-lsp",
+  "fs-watcher",
+  "wakatime",
+  "lsp-ai",
+]
+auto-format = true
+
+#  -------------------------------fs watcher
+
+# [language-server.fs-watcher]
+# command = "fs_watcher_lsp" # maybe use the path where it is installed
+# args = []
+
+[language-server.emmet-ls]
+command = "emmet-ls"
+args = ["--stdio"]
+
+# ------------------------------ spell chacking
+
+[[language]]
+name = "markdown"
+formatter = { command = "dprint", args = ["fmt", "--stdin", "md"] }
+
+indent = { tab-width = 2, unit = "  " }
+
+language-servers = ["typos", "wakatime", "lsp-ai"]
+# iwes
+auto-format = true
+soft-wrap.enable = true
+
+[language-server.codebook-lsp]
+command = "codebook-lsp"
+args = ["serve"]
+
+[language-server.iwes]
+command = "iwes"
+args = []
+
+[language-server.buffer-language-server]
+command = "buffer-language-server"
+
+[[language]]
+name = "protobuf"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "buffer-language-server",
+  "buf",
+  "pbkit",
+  "protols",
+  "wakatime",
+  "lsp-ai",
+]
+auto-format = true
+
+# ------------------------------------------ rust
+
+[[language]]
+name = "rust"
+language-servers = [
+  "typos",
+  "copilot-lsp",
+  "rust-analyzer",
+  "wakatime",
+  "lsp-ai",
+]
+auto-format = true
+formatter = { command = "rustfmt", args = [
+  "--edition",
+  "2024",
+  "--style-edition",
+  "2024",
+] }
+
+[language-server.rust-analyzer.config]
+ckeck = { command = "clippy" }
+
+[language-server.typos]
+command = "typos-lsp"
+environment = { "RUST_LOG" = "error" }
+
+[language-server.typos.config.typos] # BUG
+diagnosticSeverity = "Hint" # ["Error", "Warning", "Information", "Hint"]
+logLevel = "info"           # ["off", "error", "warn", "info", "debug", "trace"]
+
+
+[[language]]
+name = "zig"
+language-servers = ["zls", "lsp-ai", "wakatime", "typos"]
+
+[language-server.lsp-ai]
+command = "lsp-ai"
+
+#required
+[language-server.lsp-ai.config.memory.file_store]
+
+[language-server.lsp-ai.config.models.qwompleter]
+type = "open_ai"
+completions_endpoint = "http://localhost:3235/v1/completions"
+model = ""
+auth_token = "amemimy"
+
+[[language-server.lsp-ai.config.actions]]
+parameters = { max_context = 4096, max_tokens = 64, temperature = 0.0, stop = [
+  "<|file_separator|>",
+  "<|fim_prefix|>",
+  "<|fim_suffix|>",
+  "<|fim_middle|>",
+  "\n\n",
+  "|\n",
+], fim = { start = "<|fim_prefix|>", middle = "<|fim_suffix|>", end = "<|fim_middle|>" } }
+action_display_name = "qwomplete"
+model = "qwompleter"

@@ -1,0 +1,1 @@
+/home/engon/bakop/start-glance.fish

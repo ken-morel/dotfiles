@@ -1,0 +1,226 @@
+#!/usr/bin/env fish
+
+set -g endv_cache_dir "$HOME/.cache/endv"
+
+function showimage -d "Display an image file using chafa" -a file
+    echo "Displaying image file with chafa..."
+    if kitten icat --detect-support --detection-timeout=1
+        kitten icat "$file"
+    else
+        chafa -f kitty "$file"
+    end
+
+    read -n1 -P "[q]uit, [x]dg-open: " key
+    switch $key
+        case q Q
+            return 0
+        case x
+            xdg-open "$file"
+    end
+end
+function _pdfbgconverter
+    echo "Stargint bg converter"
+    set -l file "$argv[1]"
+    set -l outpath "$argv[2]"
+    set -l numpages "$argv[3]"
+    set -g pdfconverterpage 1
+
+    while test $pdfconverterpage -le $numpages
+        echo "BG converting page $pdfconverterpage"
+        set -l pdfconverterpagecache "$outpath/$pdfconverterpage.png"
+        magick "$file"[(math "$pdfconverterpage - 1")] -density 1 -quality 1 -flatten -background white "$pdfconverterpagecache"
+        set -g pdfconverterpage (math "$pdfconverterpage + 1")
+    end
+    set -g pdfconverterpage 0
+end
+function showpdf -d "Display a PDF file interactively" -a file
+    echo "Displaying pdf file...\nCreating cache directory"
+    set -l cache_dir "$endv_cache_dir/$(realpath -- "$file" | string sub -s 2 | string replace -a '/' '_' | string replace -a '.' '-')"
+    mkdir -p -- "$cache_dir"
+
+    echo "Getting pdf info"
+    set -l numpages (pdfinfo "$file" | awk '/Pages/ {print $2}')
+
+    if test $status -ne 0
+        echo "ERROR: Could no get pdf info, the file may be password protected, or you may not have pdfinfo installed" >&2
+        return 1
+    end
+
+    set -l currentpage 1
+
+    echo "Detecting support for kitty image graphics"
+    if kitten icat --detect-support --detection-timeout=1
+        set -l usekitty true
+    else
+        set -l usekitty false
+    end
+
+    _pdfbgconverter "$file" "$cache_dir" "$numpages" &
+
+    while true
+        set -l pagecache "$cache_dir/$currentpage.png"
+        while test $pdfconverterpage -eq $currentpage
+            sleep 0.1
+            echo "Waiting for pdf converter"
+        end
+
+        if test ! -e "$pagecache"
+            echo "Converting page $currentpage to png..."
+            magick "$file"[(math "$currentpage - 1")] -density 1 -quality 1 -flatten -background white "$pagecache"
+            if test $status -ne 0
+                echo "ERROR: Could no convert page $currentpage to png" >&2
+                rm -f -- "$pagecache"
+                read -n1 -P "Press any key to continue."
+            end
+        else
+            echo "Showing page from cache"
+        end
+
+        if test -e "$pagecache"
+            if $usekitty
+                kitten icat --background=white "$pagecache"
+            else
+                if set -q fullwidth
+                    chafa -f kitty --fit-width "$pagecache"; or magick "$pagecache" sixel:-
+                else
+                    chafa -f kitty "$pagecache"; or magick "$pagecache" sixel:-
+                end
+            end
+        else
+            echo "Page $currentpage not converted"
+        end
+
+        read -n1 -P "(Page $currentpage/$numpages) [n]ext, [p]rev, [f]ull, [q]uit, [x]dg-open, [g]oto, [c]lear cache: " key
+        echo
+
+        switch $key
+            case n N
+                if test $currentpage -lt $numpages
+                    set currentpage (math "$currentpage + 1")
+                end
+            case p P
+                if test $currentpage -gt 1
+                    set currentpage (math "$currentpage - 1")
+                end
+            case f F
+                if set -q fullwidth
+                    set -e fullwidth
+                else
+                    set fullwidth
+                end
+            case q Q
+                break
+            case g G
+                read -P "Enter page index between 1 and $numpages: " input
+                if test (math "$input" 2>/dev/null) -ge 1 -a (math "$input" 2>/dev/null) -le $numpages
+                    set currentpage $input
+                else
+                    echo "Invalid page number."
+                end
+            case c C
+                rm -rf "$cache_dir/*.png"
+            case x X
+                xdg-open "$file"
+        end
+    end
+    echo "Bye!"
+end
+function _showtext -a file
+    glow "$file"; or mukette "$file"; or batcat "$file"; or python -m rich.markdown "$file" | less -R; or pandoc -s -t plain "$file" | less
+end
+function showtext -d "Display the text file" -a file
+    _showtext "$file"
+    while true
+        read -n1 -P "[n]eovim, [x]dg-open, [g]low or other pager, [q]uit: " key
+        switch $key
+            case n N
+                nvim "$file"
+            case x X
+                xdg-open "$file"
+            case g G
+                _showtext "$file"
+            case q Q
+                break
+        end
+    end
+    echo Bye
+end
+
+function showaudio -d "Play the audio file with ffplay" -a file
+    ffplay -nodisp -autoexit -loglevel quiet "$file" 1>/dev/null &
+    set -l player_pid $last_pid
+    echo "Playing audio with ffplay process $player_pid, log at $tempfile"
+    while true
+        read -n1 -P "[p]lay/pause, [q]uit, [d]etach, [r]eplay: " key
+        switch $key
+            case q Q
+                kill $player_pid
+                break
+            case r R
+                kill $player_pid; and echo "Player stopped"
+                ffplay -nodisp -autoexit -loglevel quiet "$file" 1>/dev/null &
+                set -l player_pid $last_pid
+                echo "New player started at $player_pid"
+            case p P
+                if set -l -q paused
+                    kill -SIGCONT $player_pid
+                    set -l -e paused
+                else
+                    kill -SIGSTOP $player_pid
+                    set -l paused
+                end
+            case d D
+                break
+        end
+
+    end
+    if kill -0 "$player_pid" &>/dev/null
+        echo "Player process $player_pid running in background"
+    else
+        echo "Player process $player_pid likely stoped"
+    end
+end
+function showunsupported -d "Show file of unsupported type" -a file
+    echo "File type unsuported"
+    read -n1 -P "[x]dg-open, [q]uit: " key
+    switch key
+        case x X
+            xdg-open "$file"
+        case q Q
+            return 0
+    end
+end
+
+function main
+    if ! set -q argv[1]
+        echo "Usage: endv <file>" >&2
+        echo "Requires: glow, chafa or kitten, magick"
+        return 1
+    end
+
+    set -l file "$argv[1]"
+
+    if not test -f "$file"
+        echo "Error: File not found at '$file'" >&2
+        return 1
+    end
+
+    set -l extension (string split -r -m1 . "$file")[-1]
+
+    switch "$extension"
+        case jpg jpeg png gif webp
+            showimage "$file"
+        case pdf
+            showpdf "$file"
+        case txt log md
+            showtext "$file"
+        case mp3 ogg wav oga
+            showaudio "$file"
+        case '*'
+            mpv "$file"
+            showunsupported "$file"
+            return 1
+    end
+end
+
+main $argv

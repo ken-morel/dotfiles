@@ -1,0 +1,247 @@
+@keyframes blink-warning {
+  70% {
+    color: @wm_icon_bg;
+  }
+
+  to {
+    color: @wm_icon_bg;
+    background-color: @warning_color;
+  }
+}
+
+@keyframes blink-critical {
+  70% {
+    color: @wm_icon_bg;
+  }
+
+  to {
+    color: @wm_icon_bg;
+    background-color: @error_color;
+  }
+}
+
+@keyframes urgent-flash {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Reset all styles */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
+tooltip {
+  background: #1f1f28;
+  border-radius: 10px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #1a2934;
+  font-size: 8pt;
+}
+
+tooltip label {
+  padding: 3px;
+}
+
+/* The whole bar */
+#waybar {
+  background: #010203;
+  color: @theme_fg_color;
+  font-family: "Firacode Nerd Font Mono", "Font Awesome 6 Free", "Font Awesome";
+  font-size: 16px;
+}
+
+#window {
+  margin-top: 3px;
+}
+
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+#workspaces {
+  border-top: 1px solid #557755;
+  border-bottom: 1px solid #557755;
+  border-radius: 0;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+#workspaces button {
+  color: #88c0d0;
+  padding: 0px 0px;
+  margin: 0px 0px;
+  border-radius: 0%;
+  font-size: 15px;
+  font-family: "Firacode Nerd Font Mono", "Font Awesome 6 Free", "Font Awesome";
+}
+
+#workspaces button.active {
+  color: #81a1c1;
+  background-color: #3b4252;
+}
+#workspaces button:hover {
+  color: #91c1e1;
+  background-color: #7b8292;
+}
+
+
+#workspaces button.urgent {
+  color: #bf616a;
+  animation: urgent-flash 1s infinite;
+}
+
+#mode {}
+
+#clock {
+  color: #aa77aa;
+  margin: 0px 2px 0px 2px;
+  font-family: "Firacode Nerd Font Mono";
+  /*"Agave Nerd Font Mono";*/
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#custom-playerctl {
+    color: #939ab7;
+}
+
+#thermal {
+    color: #908caa;
+}
+
+#custom-gpu {
+    color: #a6d189;
+}
+
+#mode {
+  background-color: #222244;
+}
+
+#clock,
+#custom-help,
+#custom-playerctl,
+#custom-power,
+#custom-weather,
+#custom-wlsunset,
+#custom-clipboard,
+#custom-menu,
+#custom-dnd,
+#language,
+#network,
+#bluetooth,
+#pulseaudio,
+#tray,
+#mode,
+#idle_inhibitor {
+  padding: 3px;
+}
+
+#cpu,
+#memory,
+#battery {
+  padding: 0;
+  font-size: 12px;
+}
+
+#idle_inhibitor {
+  padding: 0px;
+  font-size: 22px;
+}
+
+#custom-weather {
+  border-radius: 0px;
+  border-top: 1px @theme_selected_bg_color solid;
+  border-bottom: 1px @theme_selected_bg_color solid;
+  color: @theme_selected_fg_color;
+  background: unset;
+  padding-left: 5px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  font-size: 10px;
+}
+
+#custom-wlsunset {
+  background: unset;
+}
+
+
+
+#custom-menu {}
+
+#battery {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  background: transparent;
+  color: white;
+}
+
+#battery.warning {
+  color: #887722;
+}
+
+#battery.critical {
+  color: #552211;
+}
+
+#battery.warning.discharging {
+  animation-name: blink-warning;
+  animation-duration: 3s;
+}
+
+#battery.critical.discharging {
+  animation-name: blink-critical;
+  animation-duration: 2s;
+}
+
+#battery.charging {
+  color: green;
+}
+
+label:focus {
+  background-color: #000000;
+}
+
+#custom-wf-recorder {}
+
+#tray {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  /* background-color: #222233; */
+  border-radius: 0px;
+  margin: 0px 0px;
+}
+
+#power-profiles-daemon {
+  font-size: 20px;
+}
+
+#memory,
+#cpu,
+#battery {
+  font-family: "Hack";
+  font-size: 16px;
+}
+
+#temperature {
+  color: #999944;
+}
+
+#temperature.critical {
+  background-color: #ee3355;
+}

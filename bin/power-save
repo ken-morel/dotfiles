@@ -1,0 +1,11 @@
+#!/usr/bin/env -S nu
+
+sudo tlp power-saver
+
+for $f in (ls /sys/class/scsi_host/host*/link_power_management_policy) {
+  try {
+    'min_power' | sudo tee $f.name
+  }
+}
+
+echo '1500' | sudo tee '/proc/sys/vm/dirty_writeback_centisecs'

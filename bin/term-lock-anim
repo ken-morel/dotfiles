@@ -1,0 +1,18 @@
+#!/usr/bin/env -S nu
+
+const COMMANDS = [
+    clear
+    # cacafire
+    "ghostty +boo"
+    # "cmatrix -u 10"
+    # "cmatrix -u 10 -m"
+    # "cmatrix -u 10 -r"
+]
+
+def main []: nothing -> nothing {
+
+  let num = (random int) mod ($COMMANDS | length);
+
+  exec sh -c ($COMMANDS | get --optional $num)
+
+}

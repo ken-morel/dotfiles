@@ -1,0 +1,127 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "audio": {
+    "experimental.rodio_audio": true
+  },
+  "preview_tabs": {
+    "enable_preview_from_code_navigation": true
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
+  "ui_font_family": ".ZedSans",
+  "agent_ui_font_size": 13.0,
+  "allow_rewrap": "in_selections",
+  "show_wrap_guides": true,
+  "agent": {
+    "inline_assistant_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-5-mini"
+    },
+    "default_model": {
+      "provider": "google",
+      "model": "gemini-2.5-flash"
+    },
+    "model_parameters": [],
+    "use_modifier_to_send": true
+  },
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
+  "inlay_hints": {
+    "show_background": true,
+    "enabled": true
+  },
+  "show_whitespaces": "all",
+  "indent_guides": {
+    "coloring": "indent_aware"
+  },
+  "toolbar": {
+    "code_actions": true
+  },
+  "minimap": {
+    "show": "always"
+  },
+  "relative_line_numbers": "enabled",
+  "hover_popover_delay": 200,
+  "show_signature_help_after_edits": true,
+  "auto_signature_help": true,
+  "autoscroll_on_clicks": true,
+  "autosave": "on_focus_change",
+  "helix_mode": true,
+  "buffer_line_height": "standard",
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "vim_mode": false,
+  "base_keymap": "SublimeText",
+  "ui_font_size": 14.0,
+  "buffer_font_size": 11.0,
+  "theme": {
+    "mode": "dark",
+    "light": "Ayu Light",
+    "dark": "Ayu Dark"
+  },
+  "languages": {
+    "Julia": {
+      "language_servers": ["julia", "[relint]"],
+      "enable_language_server": true,
+      "formatter": {
+        "external": {
+          "command": "runic",
+          "arguments": ["{buffer_path}"]
+        }
+      }
+    },
+    "Fish": {
+      "language_servers": ["fish-lsp", "..."]
+    }
+  },
+  "lsp": {
+    "fish-lsp": {
+      "binary": {
+        "ignore_system_version": false,
+        "path": "/home/engon/.nvm/versions/node/v22.19.0/bin/fish-lsp",
+        "arguments": ["start"]
+      }
+    },
+    "julia": {
+      "binary": {
+        "ignore_system_version": false,
+        "env": {},
+        "path": "/home/engon/bin/julia",
+        "arguments": [
+          "--project=/home/engon/JETLS.jl",
+          "--startup-file=no",
+          "--history-file=no",
+          "--threads=auto",
+          "/home/engon/JETLS.jl/runserver.jl"
+        ]
+      }
+    },
+    "[relint]": {
+      "binary": {
+        "env": {},
+        "path": "/home/engon/bin/julia",
+        "arguments": [
+          "--project=/home/engon/relint/ReLint.jl",
+          "--startup-file=no",
+          "/home/engon/relint/ReLint.jl/lsp.jl"
+        ]
+      }
+    }
+  },
+  "bottom_dock_layout": "left_aligned",
+  "collaboration_panel": {
+    "dock": "right"
+  }
+}
